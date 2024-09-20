@@ -10,6 +10,7 @@ public protocol HTTPClient {
     typealias Result = (data: Data, response: HTTPURLResponse)
     
     func get(url: URL) async throws -> Result
+    func post(url: URL, body: Data?) async throws -> Result
 }
 
 extension HTTPURLResponse {

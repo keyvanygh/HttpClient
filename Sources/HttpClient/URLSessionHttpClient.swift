@@ -28,5 +28,18 @@ public class URLSessionHttpClient: HTTPClient {
         }
         
         return (data, httpResponse)
+    } 
+    public func post(url: URL, body: Data? = nil) async throws -> HTTPClient.Result {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = body
+        
+        let (data, response) =  try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw Error.notHttpResponse
+        }
+
+        return (data, httpResponse)
     }
 }
