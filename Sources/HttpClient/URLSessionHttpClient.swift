@@ -19,7 +19,7 @@ public class URLSessionHttpClient: HTTPClient {
     }
     
     public func get(url: URL) async throws -> HTTPClient.Result {
-        let request = URLRequest(url: url)
+        let request = makeRequest(url: url)
         
         let (data, response) =  try await session.data(for: request)
         
@@ -31,12 +31,12 @@ public class URLSessionHttpClient: HTTPClient {
     } 
     
     public func post(url: URL, body: Data? = nil, header: [String: String]? = nil) async throws -> HTTPClient.Result {
-        var request = URLRequest(url: url)
-        request.httpMethod = HttpMethod.POST.rawValue
-        request.httpBody = body
-        if let header {
-        request.allHTTPHeaderFields = request.allHTTPHeaderFields?.merging(header, uniquingKeysWith: { (_, new) in new })
-        }
+        let request = makeRequest(
+            url: url,
+            httpMethod: .POST,
+            body: body,
+            header: header
+        )
         
         let (data, response) =  try await session.data(for: request)
 
@@ -45,5 +45,26 @@ public class URLSessionHttpClient: HTTPClient {
         }
 
         return (data, httpResponse)
+    }
+    
+    private func makeRequest(
+        url: URL,
+        httpMethod: HttpMethod = .GET,
+        body: Data? = nil,
+        header: [String: String]? = nil
+    ) -> URLRequest {
+        var request = URLRequest(url: url)
+
+        request.httpMethod = httpMethod.rawValue
+        
+        if let body {
+            request.httpBody = body
+        }
+        
+        if let header {
+            request.allHTTPHeaderFields = request.allHTTPHeaderFields?.merging(header, uniquingKeysWith: { (_, new) in new })
+        }
+        
+        return request
     }
 }
