@@ -31,11 +31,11 @@ final class URLSessionHttpClientTests: XCTestCase {
                 expectation.fulfill()
             }
             
-            _ = try? await sut.performRequest(
-                withHttpMethod: method,
+            _ = try? await sut.request(
                 to: url,
-                withHeader: header,
-                andBody: body
+                httpMethod: method,
+                header: header,
+                body: body
             )
             
             await fulfillment(of: [expectation], timeout: 1)
@@ -51,7 +51,7 @@ final class URLSessionHttpClientTests: XCTestCase {
             URLProtocolStub.stub(error: anyError)
             
             await expect(sutToThrow: anyError, When: {
-                try await sut.performRequest(withHttpMethod: method, to: url)
+                try await sut.request(to: url, httpMethod: method)
             })
         }
     }
@@ -65,7 +65,7 @@ final class URLSessionHttpClientTests: XCTestCase {
             URLProtocolStub.stub(response: anyNotHttpResponse)
             
             await expect(sutToThrow: URLSessionHttpClient.Error.notHttpResponse as NSError,  When: {
-                try await sut.performRequest(withHttpMethod: method, to: url)
+                try await sut.request(to: url, httpMethod: method)
             })
         }
     }
@@ -80,7 +80,7 @@ final class URLSessionHttpClientTests: XCTestCase {
             URLProtocolStub.stub(data: data, response: response)
             
             await expect(sutToReturn: (data, response), when: {
-                try await sut.performRequest(withHttpMethod: method, to: url)
+                try await sut.request(to: url, httpMethod: method)
             })
         }
     }

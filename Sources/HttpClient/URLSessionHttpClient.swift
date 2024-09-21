@@ -18,115 +18,19 @@ public class URLSessionHttpClient: HTTPClient {
         case notHttpResponse
     }
     
-    public func get(
-        url: URL,
-        header: [String: String]? = nil
+    public func request(
+        to url: URL,
+        httpMethod: HttpMethod,
+        header: [String:String]? = nil,
+        body: Data? = nil
     ) async throws -> HTTPClient.Result {
-        let request = makeRequest(url: url, header: header)
-        
-        let (data, response) =  try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw Error.notHttpResponse
-        }
-        
-        return (data, httpResponse)
-    } 
-    
-    public func post(
-        url: URL,
-        body: Data? = nil,
-        header: [String: String]? = nil
-    ) async throws -> HTTPClient.Result {
-        let request = makeRequest(
+        let request = URLRequest(
             url: url,
-            httpMethod: .POST,
-            body: body,
-            header: header
+            httpMethod: httpMethod,
+            header: header,
+            body: body
         )
-        
-        let (data, response) =  try await session.data(for: request)
 
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw Error.notHttpResponse
-        }
-
-        return (data, httpResponse)
-    }
-    
-    public func put(
-        url: URL,
-        body: Data? = nil,
-        header: [String : String]? = nil
-    ) async throws -> HTTPClient.Result {
-        let request = makeRequest(
-            url: url,
-            httpMethod: .PUT,
-            body: body,
-            header: header
-        )
-        
-        let (data, response) =  try await session.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw Error.notHttpResponse
-        }
-
-        return (data, httpResponse)
-    }
-    
-    public func patch(
-        url: URL,
-        body: Data? = nil,
-        header: [String : String]? = nil
-    ) async throws -> HTTPClient.Result {
-        let request = makeRequest(
-            url: url,
-            httpMethod: .PATCH,
-            body: body,
-            header: header
-        )
-        
-        let (data, response) =  try await session.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw Error.notHttpResponse
-        }
-
-        return (data, httpResponse)
-    }
-    
-    public func delete(
-        url: URL,
-        body: Data? = nil,
-        header: [String : String]? = nil
-    ) async throws -> HTTPClient.Result {
-        let request = makeRequest(
-            url: url,
-            httpMethod: .DELETE,
-            body: body,
-            header: header
-        )
-        
-        let (data, response) =  try await session.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw Error.notHttpResponse
-        }
-
-        return (data, httpResponse)
-    }
-    
-    public func head(
-        url: URL,
-        header: [String : String]? = nil
-    ) async throws -> HTTPClient.Result {
-        let request = makeRequest(
-            url: url,
-            httpMethod: .HEAD,
-            header: header
-        )
-        
         let (data, response) =  try await session.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -138,13 +42,13 @@ public class URLSessionHttpClient: HTTPClient {
     
     // MARK: - Helpers
     
-    private func makeRequest(
+    private func URLRequest(
         url: URL,
         httpMethod: HttpMethod = .GET,
-        body: Data? = nil,
-        header: [String: String]? = nil
+        header: [String: String]? = nil,
+        body: Data? = nil
     ) -> URLRequest {
-        var request = URLRequest(url: url)
+        var request = Foundation.URLRequest(url: url)
 
         request.httpMethod = httpMethod.rawValue
         
