@@ -10,11 +10,11 @@ public protocol HTTPClient {
     typealias Result = (data: Data, response: HTTPURLResponse)
     
     func get(url: URL) async throws -> Result
-    func post(url: URL, body: Data?) async throws -> Result
+    func post(url: URL, body: Data?, header: [String : String]?) async throws -> Result
 }
 
-extension HTTPURLResponse {
-    var isOk_200: Bool {
-        return statusCode == 200
-    }
+public enum HttpMethod: String {
+    case GET
+    case POST
 }
+
