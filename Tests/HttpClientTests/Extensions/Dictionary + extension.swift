@@ -12,3 +12,8 @@ extension [String: Any] {
         return try! JSONSerialization.data(withJSONObject: self)
     }
 }
+extension [String: String] {
+    func isSubset(of dict: Self) -> Bool {
+        self.allSatisfy({ dict[$0.key] == $0.value })
+    }
+}

@@ -29,10 +29,14 @@ public class URLSessionHttpClient: HTTPClient {
         
         return (data, httpResponse)
     } 
-    public func post(url: URL, body: Data? = nil) async throws -> HTTPClient.Result {
+    
+    public func post(url: URL, body: Data? = nil, header: [String: String]? = nil) async throws -> HTTPClient.Result {
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = HttpMethod.POST.rawValue
         request.httpBody = body
+        if let header {
+        request.allHTTPHeaderFields = request.allHTTPHeaderFields?.merging(header, uniquingKeysWith: { (_, new) in new })
+        }
         
         let (data, response) =  try await session.data(for: request)
 

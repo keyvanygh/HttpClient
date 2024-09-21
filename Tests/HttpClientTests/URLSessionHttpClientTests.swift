@@ -19,7 +19,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         
         URLProtocolStub.addRequestObserver { request in
             XCTAssertEqual(request.url, url)
-            XCTAssertEqual(request.httpMethod, "GET")
+            XCTAssertEqual(request.httpMethod, HttpMethod.GET.rawValue)
             expectation.fulfill()
         }
         
@@ -27,11 +27,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         
         await fulfillment(of: [expectation], timeout: 1)
     }
-    private func expect(to: @escaping (XCTestExpectation) -> ()) {
-        let expectation = expectation(description: "asd")
-        to(expectation)
-        wait(for: [expectation])
-    }
+    
     func test_get_throwsErrorOnRequestError() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
@@ -69,7 +65,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         })
     }
     
-    func test_get_performPostRequestToURLWithBody() async {
+    func test_post_performPostRequestToURLWithBody() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
         let bodyData: Data = .dummy
@@ -79,12 +75,35 @@ final class URLSessionHttpClientTests: XCTestCase {
         
         URLProtocolStub.addRequestObserver { request in
             XCTAssertEqual(request.url, url)
-            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.httpMethod, HttpMethod.POST.rawValue)
             XCTAssertEqual(request.httpBodyStream?.data, bodyData)
             expecation.fulfill()
         }
         
         _ = try? await sut.post(url: url, body: bodyData)
+        
+        await fulfillment(of: [expecation], timeout: 1)
+    }
+    
+    func test_get_performPostRequestWithPassedHeader() async {
+        let url: URL = .dummy
+        let sut = URLSessionHttpClient()
+        let bodyData: Data = .dummy
+        let anyHeader = ["anyKey": "anyValue"]
+        URLProtocolStub.stub(error: .anyError())
+        
+        let expecation = expectation(description: "observe request")
+        
+        URLProtocolStub.addRequestObserver { request in
+            guard let requestHeader = request.allHTTPHeaderFields else {
+                return XCTFail("expeced header but received nil")
+            }
+            XCTAssertTrue(anyHeader.isSubset(of: requestHeader), "expected \(anyHeader), but received \(requestHeader)")
+
+            expecation.fulfill()
+        }
+        
+        _ = try? await sut.post(url: url, body: bodyData, header: anyHeader)
         
         await fulfillment(of: [expecation], timeout: 1)
     }
