@@ -13,7 +13,7 @@ final class URLSessionHttpClientTests: XCTestCase {
     func test_get_performGetRequestToURL() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
-        URLProtocolStub.stub(error: .anyError())
+        URLProtocolStub.stub(error: .anyError)
         
         let expectation = expectation(description: "observe request")
         
@@ -31,7 +31,7 @@ final class URLSessionHttpClientTests: XCTestCase {
     func test_get_throwsErrorOnRequestError() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
-        let anyError: NSError = .anyError()
+        let anyError: NSError = .anyError
         
         URLProtocolStub.stub(error: anyError)
         
@@ -69,7 +69,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
         let bodyData: Data = .dummy
-        URLProtocolStub.stub(error: .anyError())
+        URLProtocolStub.stub(error: .anyError)
         
         let expecation = expectation(description: "observe request")
         
@@ -90,7 +90,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         let sut = URLSessionHttpClient()
         let bodyData: Data = .dummy
         let anyHeader: [String: String] = .dummy
-        URLProtocolStub.stub(error: .anyError())
+        URLProtocolStub.stub(error: .anyError)
         
         let expecation = expectation(description: "observe request")
         
@@ -111,7 +111,7 @@ final class URLSessionHttpClientTests: XCTestCase {
     func test_post_throwsErrorOnRequestError() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
-        let anyError: NSError = .anyError()
+        let anyError: NSError = .anyError
         
         URLProtocolStub.stub(error: anyError)
         

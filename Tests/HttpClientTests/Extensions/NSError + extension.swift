@@ -8,7 +8,5 @@
 import Foundation
 
 extension NSError {
-    static func anyError() -> NSError {
-        return NSError(domain: "Test", code: 0)
-    }
+    static let anyError: NSError = NSError(domain: "Test", code: 0)
 }
