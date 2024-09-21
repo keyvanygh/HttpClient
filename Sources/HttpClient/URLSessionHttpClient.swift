@@ -47,6 +47,75 @@ public class URLSessionHttpClient: HTTPClient {
         return (data, httpResponse)
     }
     
+    public func put(url: URL, body: Data? = nil, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+        let request = makeRequest(
+            url: url,
+            httpMethod: .PUT,
+            body: body,
+            header: header
+        )
+        
+        let (data, response) =  try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw Error.notHttpResponse
+        }
+
+        return (data, httpResponse)
+    }
+    
+    public func patch(url: URL, body: Data? = nil, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+        let request = makeRequest(
+            url: url,
+            httpMethod: .PATCH,
+            body: body,
+            header: header
+        )
+        
+        let (data, response) =  try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw Error.notHttpResponse
+        }
+
+        return (data, httpResponse)
+    }
+    
+    public func delete(url: URL, body: Data? = nil, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+        let request = makeRequest(
+            url: url,
+            httpMethod: .DELETE,
+            body: body,
+            header: header
+        )
+        
+        let (data, response) =  try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw Error.notHttpResponse
+        }
+
+        return (data, httpResponse)
+    }
+    
+    public func head(url: URL, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+        let request = makeRequest(
+            url: url,
+            httpMethod: .HEAD,
+            header: header
+        )
+        
+        let (data, response) =  try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw Error.notHttpResponse
+        }
+
+        return (data, httpResponse)
+    }
+    
+    // MARK: - Helpers
+    
     private func makeRequest(
         url: URL,
         httpMethod: HttpMethod = .GET,
