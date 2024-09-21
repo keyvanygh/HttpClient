@@ -13,6 +13,8 @@ extension [String: Any] {
     }
 }
 extension [String: String] {
+    static let dummy = ["anyKey": "anyValue"]
+    
     func isSubset(of dict: Self) -> Bool {
         self.allSatisfy({ dict[$0.key] == $0.value })
     }

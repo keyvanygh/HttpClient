@@ -89,7 +89,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
         let bodyData: Data = .dummy
-        let anyHeader = ["anyKey": "anyValue"]
+        let anyHeader: [String: String] = .dummy
         URLProtocolStub.stub(error: .anyError())
         
         let expecation = expectation(description: "observe request")
