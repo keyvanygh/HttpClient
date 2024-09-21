@@ -15,21 +15,9 @@ final class URLSessionHttpClientTests: XCTestCase {
             let url: URL = .dummy
             let body: Data = .dummy
             let header: [String: String] = .dummy
-            let sut = URLSessionHttpClient()
+            let sut = makeSUT()
+            
             URLProtocolStub.stub(error: .dummy)
-            
-            let expectation = expectation(description: "observe request")
-            
-            URLProtocolStub.addRequestObserver { request in
-                XCTAssertEqual(request.url, url)
-                XCTAssertEqual(request.httpMethod, method.rawValue)
-                let requestHeader = request.allHTTPHeaderFields ?? [:]
-                XCTAssertTrue(header.isSubset(of: requestHeader), "expected \(header), but received \(requestHeader)")
-                if method.canHaveBody {
-                    XCTAssertEqual(request.httpBodyStream?.data, body)
-                }
-                expectation.fulfill()
-            }
             
             _ = try? await sut.request(
                 method,
@@ -37,15 +25,21 @@ final class URLSessionHttpClientTests: XCTestCase {
                 header: header,
                 body: body
             )
-            
-            await fulfillment(of: [expectation], timeout: 1)
+                        
+            expect(
+                request: URLProtocolStub.request!,
+                withMethod: method,
+                url: url,
+                header: header,
+                body: body
+            )
         }
     }
     
     func test_request_throwsErrorOnRequestError() async {
         for method in HttpMethod.allCases {
             let url: URL = .dummy
-            let sut = URLSessionHttpClient()
+            let sut = makeSUT()
             let anyError: NSError = .dummy
             
             URLProtocolStub.stub(error: anyError)
@@ -59,7 +53,7 @@ final class URLSessionHttpClientTests: XCTestCase {
     func test_request_throwNotHttpResponseErrorOnRequestWithNotHttpResoponse() async {
         for method in HttpMethod.allCases {
             let url: URL = .dummy
-            let sut = URLSessionHttpClient()
+            let sut = makeSUT()
             let anyNotHttpResponse = URLResponse.init(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
             
             URLProtocolStub.stub(response: anyNotHttpResponse)
@@ -75,7 +69,7 @@ final class URLSessionHttpClientTests: XCTestCase {
             let url: URL = .dummy
             let data: Data = .dummy
             let response = HTTPURLResponse.ok_200
-            let sut = URLSessionHttpClient()
+            let sut = makeSUT()
             
             URLProtocolStub.stub(data: data, response: response)
             
@@ -104,6 +98,30 @@ final class URLSessionHttpClientTests: XCTestCase {
             XCTAssertEqual(receivedError.domain, expectedError.domain)
             XCTAssertEqual(receivedError.code, expectedError.code)
             XCTAssertEqual(receivedError.localizedDescription, expectedError.localizedDescription)
+        }
+    }
+    
+    private func makeSUT() -> URLSessionHttpClient {
+        return URLSessionHttpClient()
+    }
+    
+    private func expect(
+        request: URLRequest,
+        withMethod method: HttpMethod,
+        url: URL,
+        header: [String:String]? = nil,
+        body: Data? = nil
+    ) {
+        XCTAssertEqual(request.url, url)
+        XCTAssertEqual(request.httpMethod, method.rawValue)
+        
+        if let header {
+            let requestHeader = request.allHTTPHeaderFields ?? [:]
+            XCTAssertTrue(header.isSubset(of: requestHeader), "expected \(header), but received \(requestHeader)")
+        }
+        
+        if method.canHaveBody {
+            XCTAssertEqual(request.httpBodyStream?.data, body)
         }
     }
     

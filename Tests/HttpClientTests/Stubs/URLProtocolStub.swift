@@ -8,8 +8,9 @@
 import Foundation
 
 class URLProtocolStub: URLProtocol {
+    public static var request: URLRequest? = nil
+
     private static var stub: Stub?
-    private static var requestObserver: ((URLRequest) -> Void)? = nil
 
     private struct Stub {
         let data: Data?
@@ -20,14 +21,10 @@ class URLProtocolStub: URLProtocol {
     public static func register() {
         URLProtocol.registerClass(URLProtocolStub.self)
     }
-    
+
     public static func unregister() {
         URLProtocol.unregisterClass(URLProtocolStub.self)
-        requestObserver = nil
-    }
-    
-    public static func addRequestObserver(observer: @escaping (URLRequest) -> Void) {
-        requestObserver = observer
+        request = nil
     }
     
     public static func stub(
@@ -39,7 +36,7 @@ class URLProtocolStub: URLProtocol {
     }
     
     override class func canInit(with request: URLRequest) -> Bool {
-        requestObserver?(request)
+        self.request = request
         return true
     }
     
