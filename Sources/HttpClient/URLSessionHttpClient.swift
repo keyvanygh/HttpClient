@@ -19,8 +19,8 @@ public class URLSessionHttpClient: HTTPClient {
     }
     
     public func request(
+        _ httpMethod: HttpMethod,
         to url: URL,
-        httpMethod: HttpMethod,
         header: [String:String]? = nil,
         body: Data? = nil
     ) async throws -> HTTPClient.Result {

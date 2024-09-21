@@ -9,7 +9,7 @@ import Foundation
 public protocol HTTPClient {
     typealias Result = (data: Data, response: HTTPURLResponse)
     
-    func request(to url: URL, httpMethod: HttpMethod, header: [String:String]?, body: Data?) async throws -> Result
+    func request(_ httpMethod: HttpMethod, to url: URL, header: [String:String]?, body: Data?) async throws -> Result
 }
 
 public enum HttpMethod: String, CaseIterable {
