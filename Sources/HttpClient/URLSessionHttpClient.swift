@@ -18,7 +18,10 @@ public class URLSessionHttpClient: HTTPClient {
         case notHttpResponse
     }
     
-    public func get(url: URL, header: [String: String]? = nil) async throws -> HTTPClient.Result {
+    public func get(
+        url: URL,
+        header: [String: String]? = nil
+    ) async throws -> HTTPClient.Result {
         let request = makeRequest(url: url, header: header)
         
         let (data, response) =  try await session.data(for: request)
@@ -30,7 +33,11 @@ public class URLSessionHttpClient: HTTPClient {
         return (data, httpResponse)
     } 
     
-    public func post(url: URL, body: Data? = nil, header: [String: String]? = nil) async throws -> HTTPClient.Result {
+    public func post(
+        url: URL,
+        body: Data? = nil,
+        header: [String: String]? = nil
+    ) async throws -> HTTPClient.Result {
         let request = makeRequest(
             url: url,
             httpMethod: .POST,
@@ -47,7 +54,11 @@ public class URLSessionHttpClient: HTTPClient {
         return (data, httpResponse)
     }
     
-    public func put(url: URL, body: Data? = nil, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+    public func put(
+        url: URL,
+        body: Data? = nil,
+        header: [String : String]? = nil
+    ) async throws -> HTTPClient.Result {
         let request = makeRequest(
             url: url,
             httpMethod: .PUT,
@@ -64,7 +75,11 @@ public class URLSessionHttpClient: HTTPClient {
         return (data, httpResponse)
     }
     
-    public func patch(url: URL, body: Data? = nil, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+    public func patch(
+        url: URL,
+        body: Data? = nil,
+        header: [String : String]? = nil
+    ) async throws -> HTTPClient.Result {
         let request = makeRequest(
             url: url,
             httpMethod: .PATCH,
@@ -81,7 +96,11 @@ public class URLSessionHttpClient: HTTPClient {
         return (data, httpResponse)
     }
     
-    public func delete(url: URL, body: Data? = nil, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+    public func delete(
+        url: URL,
+        body: Data? = nil,
+        header: [String : String]? = nil
+    ) async throws -> HTTPClient.Result {
         let request = makeRequest(
             url: url,
             httpMethod: .DELETE,
@@ -98,7 +117,10 @@ public class URLSessionHttpClient: HTTPClient {
         return (data, httpResponse)
     }
     
-    public func head(url: URL, header: [String : String]? = nil) async throws -> HTTPClient.Result {
+    public func head(
+        url: URL,
+        header: [String : String]? = nil
+    ) async throws -> HTTPClient.Result {
         let request = makeRequest(
             url: url,
             httpMethod: .HEAD,
