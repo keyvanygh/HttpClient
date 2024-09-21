@@ -9,7 +9,7 @@ import Foundation
 public protocol HTTPClient {
     typealias Result = (data: Data, response: HTTPURLResponse)
     
-    func get(url: URL) async throws -> Result
+    func get(url: URL, header: [String: String]?) async throws -> Result
     func post(url: URL, body: Data?, header: [String: String]?) async throws -> Result
 }
 

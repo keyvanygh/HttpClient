@@ -18,8 +18,8 @@ public class URLSessionHttpClient: HTTPClient {
         case notHttpResponse
     }
     
-    public func get(url: URL) async throws -> HTTPClient.Result {
-        let request = makeRequest(url: url)
+    public func get(url: URL, header: [String: String]? = nil) async throws -> HTTPClient.Result {
+        let request = makeRequest(url: url, header: header)
         
         let (data, response) =  try await session.data(for: request)
         

@@ -28,6 +28,29 @@ final class URLSessionHttpClientTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1)
     }
     
+    func test_get_performRequestWithPassedHeader() async {
+        let url: URL = .dummy
+        let sut = URLSessionHttpClient()
+        let bodyData: Data = .dummy
+        let anyHeader: [String: String] = .dummy
+        URLProtocolStub.stub(error: .dummy)
+        
+        let expecation = expectation(description: "observe request")
+        
+        URLProtocolStub.addRequestObserver { request in
+            guard let requestHeader = request.allHTTPHeaderFields else {
+                return XCTFail("expeced header but received nil")
+            }
+            XCTAssertTrue(anyHeader.isSubset(of: requestHeader), "expected \(anyHeader), but received \(requestHeader)")
+
+            expecation.fulfill()
+        }
+        
+        _ = try? await sut.get(url: url, header: anyHeader)
+        
+        await fulfillment(of: [expecation], timeout: 1)
+    }
+    
     func test_get_throwsErrorOnRequestError() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
@@ -85,7 +108,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         await fulfillment(of: [expecation], timeout: 1)
     }
     
-    func test_get_performPostRequestWithPassedHeader() async {
+    func test_post_performRequestWithPassedHeader() async {
         let url: URL = .dummy
         let sut = URLSessionHttpClient()
         let bodyData: Data = .dummy
