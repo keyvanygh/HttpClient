@@ -7,8 +7,8 @@
 
 import Foundation
 
-extension HTTPURLResponse {
-    var isOk_200: Bool {
+public extension HTTPURLResponse {
+    public var isOk_200: Bool {
         return statusCode == 200
     }
 }
