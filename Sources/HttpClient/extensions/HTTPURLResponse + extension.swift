@@ -8,7 +8,7 @@
 import Foundation
 
 public extension HTTPURLResponse {
-    public var isOk_200: Bool {
+    var isOk_200: Bool {
         return statusCode == 200
     }
 }
