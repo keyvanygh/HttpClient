@@ -10,7 +10,7 @@ import HttpClient
 
 final class URLSessionHttpClientTests: XCTestCase {
     
-    func test_all_performRequestWithExpectedRequest() async {
+    func test_request_performRequestWithExpectedRequest() async {
         for method in HttpMethod.allCases {
             let url: URL = .dummy
             let body: Data = .dummy
@@ -42,7 +42,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         }
     }
     
-    func test_all_throwsErrorOnRequestError() async {
+    func test_request_throwsErrorOnRequestError() async {
         for method in HttpMethod.allCases {
             let url: URL = .dummy
             let sut = URLSessionHttpClient()
@@ -56,7 +56,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         }
     }
     
-    func test_all_throwNotHttpResponseErrorOnRequestWithNotHttpResoponse() async {
+    func test_request_throwNotHttpResponseErrorOnRequestWithNotHttpResoponse() async {
         for method in HttpMethod.allCases {
             let url: URL = .dummy
             let sut = URLSessionHttpClient()
@@ -70,7 +70,7 @@ final class URLSessionHttpClientTests: XCTestCase {
         }
     }
     
-    func test_all_returnCorrectDataAndResponseOnSuccessRequest() async  {
+    func test_request_returnCorrectDataAndResponseOnSuccessRequest() async  {
         for method in HttpMethod.allCases {
             let url: URL = .dummy
             let data: Data = .dummy
